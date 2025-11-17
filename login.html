@@ -1,66 +1,72 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - V3xado Shop</title>
+    <title>Login Admin - LATAMROT</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="login-bg"><div class="login-container">
-    <h1 class="login-title">V3xado <span>Login</span></h1>
-    <p class="login-sub">Accede con tu cuenta</p>
+<body>
 
-    <div class="login-box">
-        <input type="text" id="email" placeholder="Correo" class="login-input">
-        <input type="password" id="password" placeholder="Contraseña" class="login-input">
-
-        <button id="loginBtn" class="btn-neon">Entrar</button>
-
-        <p id="loginMsg" class="login-msg"></p>
+    <div class="login-container">
+        <h2>Panel Admin</h2>
+        <input id="username" type="text" placeholder="Usuario">
+        <input id="password" type="password" placeholder="Contraseña">
+        <button onclick="login()">Entrar</button>
+        <p id="msg" class="msg"></p>
     </div>
-</div>
 
-<script type="module">
-    import { auth, signInWithEmailAndPassword, db, doc, getDoc } from './firebase.js';
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const btn = document.getElementById('loginBtn');
-    const msg = document.getElementById('loginMsg');
+        const firebaseConfig = {
+            apiKey: "TU_APIKEY",
+            authDomain: "TU_AUTH_DOMAIN",
+            projectId: "TU_PROJECT_ID",
+            storageBucket: "TU_STORAGE_BUCKET",
+            messagingSenderId: "TU_MSG_ID",
+            appId: "TU_APP_ID"
+        };
 
-    btn.addEventListener('click', async () => {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        msg.textContent = "";
-        msg.style.color = "white";
+        async function login() {
+            const user = document.getElementById("username").value;
+            const pass = document.getElementById("password").value;
+            const msg = document.getElementById("msg");
 
-        try {
-            // Login
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
+            msg.innerText = "Verificando...";
 
-            // Leer rol desde Firestore
-            const ref = doc(db, "users", user.uid);
-            const snap = await getDoc(ref);
+            const q = query(collection(db, "usuarios"), where("username", "==", user));
+            const result = await getDocs(q);
 
-            if (!snap.exists()) {
-                msg.textContent = "Cuenta sin datos de usuario.";
+            if (result.empty) {
+                msg.innerText = "Usuario no encontrado";
                 return;
             }
 
-            const userData = snap.data();
+            const data = result.docs[0].data();
 
-            // Si es admin
-            if (userData.role === "admin") {
-                window.location.href = "admin.html";
-            } else {
-                window.location.href = "tienda.html";
+            if (data.password !== pass) {
+                msg.innerText = "Contraseña incorrecta";
+                return;
             }
 
-        } catch (error) {
-            msg.style.color = "#ff005d";
-            msg.textContent = "Error: " + error.message;
+            if (data.rol !== "admin") {
+                msg.innerText = "No tienes permisos de administrador";
+                return;
+            }
+
+            // Guardar sesión
+            localStorage.setItem("adminUser", user);
+
+            // Redirigir
+            window.location.href = "admin.html";
         }
-    });
-</script>
+    </script>
 
 </body>
-</html>
+    </html>
