@@ -139,3 +139,134 @@ body, button, input, a {
     font-size: 0.9rem;
     text-shadow: 0 0 10px #ff4fa3;
 }
+/* Header tienda */
+.store-header {
+    text-align: center;
+    padding: 25px 10px;
+}
+
+.store-title {
+    font-size: 2.4rem;
+    font-weight: 900;
+    text-shadow: 0 0 12px #009dff, 0 0 25px #ff006a;
+}
+
+.btn-logout {
+    background: #1a1a1a;
+    border: 2px solid #ff006a;
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 0 12px #ff006a;
+    transition: 0.2s;
+}
+
+.btn-logout:hover {
+    background: #ff0055;
+    box-shadow: 0 0 25px #ff006a;
+}
+
+/* Productos */
+.store-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background: #0a0a0a;
+    border: 2px solid #009dff;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 15px #009dff50, 0 0 25px #ff006a30;
+    transition: 0.2s;
+}
+
+.product-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 25px #009dff, 0 0 40px #ff006a;
+}
+
+.product-img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+/* Nombre del producto */
+.product-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #009dff;
+}
+
+/* Precio */
+.product-price {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+/* Duración */
+.product-days {
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
+
+/* Stock verde */
+.product-stock {
+    margin-top: 8px;
+    font-weight: 700;
+    color: #00ff6e;
+    text-shadow: 0 0 10px #00ff6e;
+}
+
+/* Botones */
+.product-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #009dff;
+    background: #001f3f;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 0 10px #009dff;
+    transition: 0.2s;
+}
+
+.product-btn:hover {
+    background: #009dff;
+    color: #000;
+}
+
+/* Modal info */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000aa;
+}
+
+.modal-content {
+    background: #0a0a0a;
+    width: 90%;
+    max-width: 450px;
+    margin: 120px auto;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid #009dff;
+    box-shadow: 0 0 25px #009dff, 0 0 45px #ff006a;
+    }
