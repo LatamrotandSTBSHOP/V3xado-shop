@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - V3xado Shop</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg">
+
+    <div class="login-container">
+        <h1 class="login-title">V3xado Login</h1>
+
+        <form id="loginForm">
+
+            <label class="label">Usuario</label>
+            <input type="text" id="username" class="input" placeholder="Ingresa tu usuario" required>
+
+            <label class="label">Contraseña</label>
+            <input type="password" id="password" class="input" placeholder="Ingresa tu contraseña" required>
+
+            <label class="label">Tipo de cuenta</label>
+            <select id="role" class="input">
+                <option value="cliente">Cliente</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button type="submit" class="btn-neon-blue login-btn">Iniciar sesión</button>
+        </form>
+
+        <a href="index.html" class="back">← Volver al inicio</a>
+    </div>
+
+</body>
+</html>
