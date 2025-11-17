@@ -1,42 +1,123 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda - V3xado Shop</title>
     <link rel="stylesheet" href="style.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 </head>
-
-<body class="bg">
-
-    <header class="store-header">
-        <h1 class="store-title">🛒 V3xado Shop</h1>
-        <a href="login.html" class="btn-logout">Cerrar sesión</a>
-    </header>
-
-    <section class="store-container" id="productList">
-        <!-- Aquí Firebase insertará los productos -->
-    </section>
-
-    <!-- Modal de Información -->
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <h2 id="infoName"></h2>
-            <p id="infoDesc"></p>
-            <p id="infoDays"></p>
-            <button class="btn-neon-blue" onclick="closeInfo()">Cerrar</button>
-        </div>
+<body class="store-bg"><header class="store-header">
+    <h1 class="store-title">V3xado <span>Shop</span></h1>
+    <div class="user-info">
+        <p id="saldoText">Saldo: $0</p>
+        <button id="logoutBtn" class="logout-btn">Salir</button>
     </div>
-<body>
-    <!-- contenido de tu página -->
+</header>
 
-    <script type="module">
-        import { db, auth } from "./firebase.js";
-        // aquí el código que usa Firebase
-    </script>
-</body>
-</html>
-</body>
-</html>
+<section class="product-section" id="productList">
+    <!-- Productos generados desde Firebase -->
+</section>
+
+<!-- Ventana modal de compra -->
+<div class="modal hidden" id="buyModal">
+    <div class="modal-content">
+        <h2 id="modalName"></h2>
+        <p id="modalDesc"></p>
+        <p id="modalPrice"></p>
+        <p id="modalStock"></p>
+        <p id="modalStatus"></p>
+
+        <button id="confirmBuy" class="btn-neon">Comprar</button>
+        <button id="closeModal" class="btn-close">Cerrar</button>
+    </div>
+</div>
+
+<script type="module">
+    import { db, auth, onAuthStateChanged, signOut, doc, getDoc, updateDoc, collection, getDocs } from './firebase.js';
+
+    const productList = document.getElementById('productList');
+    const saldoText = document.getElementById('saldoText');
+
+    const buyModal = document.getElementById('buyModal');
+    const closeModal = document.getElementById('closeModal');
+    const confirmBuy = document.getElementById('confirmBuy');
+
+    let selectedProduct = null;
+    let currentUser = null;
+    let userSaldo = 0;
+
+    // Detectar usuario logueado
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) return (window.location.href = 'login.html');
+
+        currentUser = user;
+        const userRef = doc(db, 'users', user.uid);
+        const snap = await getDoc(userRef);
+
+        userSaldo = snap.data().saldo;
+        saldoText.textContent = `Saldo: $${userSaldo}`;
+
+        loadProducts();
+    });
+
+    // Cargar productos desde Firebase
+    async function loadProducts() {
+        const productsSnap = await getDocs(collection(db, 'products'));
+
+        productList.innerHTML = "";
+
+        productsSnap.forEach((docu) => {
+            const p = docu.data();
+            const id = docu.id;
+
+            const card = document.createElement('div');
+            card.classList.add('product-card');
+
+            card.innerHTML = `
+                <img src="${p.image}" class="product-img">
+                <h3>${p.name}</h3>
+                <p class="price">Precio: $${p.price}</p>
+                <p class="stock">Stock: <span>${p.stock}</span></p>
+                <button class="btn-neon buyBtn" data-id="${id}">Comprar</button>
+            `;
+
+            productList.appendChild(card);
+        });
+
+        document.querySelectorAll('.buyBtn').forEach((btn) => {
+            btn.addEventListener('click', (e) => openBuy(e.target.dataset.id));
+        });
+    }
+
+    // Abrir modal de compra
+    async function openBuy(id) {
+        const ref = doc(db, 'products', id);
+        const snap = await getDoc(ref);
+        const p = snap.data();
+
+        selectedProduct = { id, ...p };
+
+        document.getElementById('modalName').textContent = p.name;
+        document.getElementById('modalDesc').textContent = `Duración: ${p.days} días`;
+        document.getElementById('modalPrice').textContent = `Precio: $${p.price}`;
+        document.getElementById('modalStock').textContent = `Stock: ${p.stock}`;
+
+        if (userSaldo < p.price) {
+            document.getElementById('modalStatus').textContent = "Saldo insuficiente";
+            document.getElementById('modalStatus').style.color = '#ff005d';
+            confirmBuy.style.display = 'none';
+        } else {
+            document.getElementById('modalStatus').textContent = "Saldo suficiente";
+            document.getElementById('modalStatus').style.color = '#00ff9d';
+            confirmBuy.style.display = 'inline-block';
+        }
+
+        buyModal.classList.remove('hidden');
+    }
+
+    // Confirmar compra
+    confirmBuy.addEventListener('click', async () => {
+        const newSaldo = userSaldo - selectedProduct.price;
+        const newStock = selectedProduct.stock - 1;
+
+        // Actualizar saldo
+        await updateDoc(doc(db, 'users', currentUser.uid), { saldo: newSaldo });
