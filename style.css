@@ -1,272 +1,28 @@
-/* Fuente base */
-body, button, input, a {
-    font-family: 'Montserrat', sans-serif;
-}
+/* ===== GENERAL ===== */
 
-/* Fondo oscuro con gradiente sutil */
-.bg {
-    background: #050505;
-    color: white;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-}
+{ margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
 
-/* Header */
-.header {
-    text-align: center;
-    padding: 30px 20px;
-}
 
-.logo {
-    width: 110px;
-    filter: drop-shadow(0 0 15px #ff0084);
-}
+body { background: #05060a; color: #fff; }
 
-.title {
-    font-size: 2.8rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px #009dff, 0 0 20px #ff0044;
-}
+/* ===== HERO / PORTADA ===== */ .hero { position: relative; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: url('assets/logo.png') center/cover no-repeat; }
 
-/* Main Center */
-.center {
-    text-align: center;
-    margin-top: 40px;
-}
+.overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
 
-.welcome {
-    font-size: 2rem;
-    text-shadow: 0 0 10px #00c8ff;
-}
+.title { font-size: 4rem; font-weight: 800; z-index: 2; text-shadow: 0 0 15px #009dff; }
 
-.subtitle {
-    font-size: 1.1rem;
-    margin-bottom: 25px;
-    opacity: 0.8;
-}
+.title span { color: #ff005d; text-shadow: 0 0 15px #ff005d; }
 
-/* Botón Neón Azul */
-.btn-neon-blue {
-    display: inline-block;
-    padding: 14px 28px;
-    color: white;
-    background: #001f3f;
-    border: 2px solid #009dff;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    text-decoration: none;
-    cursor: pointer;
-    font-weight: 600;
-    box-shadow: 0 0 10px #009dff, 0 0 25px #009dff;
-    transition: 0.15s;
-}
+.subtitle { font-size: 1.2rem; margin: 15px 0; z-index: 2; color: #c7c7c7; }
 
-.btn-neon-blue:hover {
-    background: #009dff;
-    color: #000;
-    box-shadow: 0 0 20px #00c8ff, 0 0 50px #009dff;
-}
+/* ===== BOTÓN NEÓN ===== */ .btn-neon { margin-top: 25px; padding: 12px 28px; font-size: 1.1rem; color: #fff; text-decoration: none; border: 2px solid #00c8ff; border-radius: 10px; z-index: 2; transition: 0.2s ease; box-shadow: 0 0 10px #00c8ff, 0 0 25px #00c8ff; }
 
-/* Footer */
-.footer {
-    margin-top: 80px;
-    text-align: center;
-    font-size: 0.9rem;
-    opacity: 0.6;
-}
-/* Contenedor login */
-.login-container {
-    width: 90%;
-    max-width: 420px;
-    margin: 80px auto;
-    background: #0a0a0a;
-    padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px #009dff80, 0 0 35px #ff005580;
-    text-align: center;
-}
+.btn-neon:hover { background: #00c8ff; color: #000; box-shadow: 0 0 20px #00c8ff, 0 0 50px #00c8ff; }
 
-/* Titulo login */
-.login-title {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 25px;
-    text-shadow: 0 0 10px #009dff, 0 0 25px #ff006a;
-}
+/* ===== FEATURES ===== */ .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; padding: 50px; }
 
-/* Etiquetas */
-.label {
-    display: block;
-    text-align: left;
-    font-weight: 600;
-    margin: 10px 0 5px;
-    color: #c8c8c8;
-}
+.feature-card { background: #0a0d14; padding: 20px; border-radius: 12px; text-align: center; border: 2px solid #182232; transition: 0.3s ease; box-shadow: 0 0 15px rgba(0, 132, 255, 0.3); }
 
-/* Inputs */
-.input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 18px;
-    border: 2px solid #009dff;
-    background: #020202;
-    color: white;
-    border-radius: 8px;
-    outline: none;
-    font-size: 1rem;
-    transition: 0.2s;
-}
+.feature-card:hover { transform: translateY(-5px); border-color: #009dff; box-shadow: 0 0 25px rgba(0, 132, 255, 0.7); }
 
-.input:focus {
-    box-shadow: 0 0 15px #009dff, 0 0 35px #ff0055;
-    border-color: #ff006a;
-}
-
-/* Botón login */
-.login-btn {
-    width: 100%;
-    margin-top: 10px;
-}
-
-/* Volver */
-.back {
-    margin-top: 20px;
-    display: inline-block;
-    text-decoration: none;
-    color: #ff4fa3;
-    font-size: 0.9rem;
-    text-shadow: 0 0 10px #ff4fa3;
-}
-/* Header tienda */
-.store-header {
-    text-align: center;
-    padding: 25px 10px;
-}
-
-.store-title {
-    font-size: 2.4rem;
-    font-weight: 900;
-    text-shadow: 0 0 12px #009dff, 0 0 25px #ff006a;
-}
-
-.btn-logout {
-    background: #1a1a1a;
-    border: 2px solid #ff006a;
-    padding: 10px 20px;
-    border-radius: 8px;
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    box-shadow: 0 0 12px #ff006a;
-    transition: 0.2s;
-}
-
-.btn-logout:hover {
-    background: #ff0055;
-    box-shadow: 0 0 25px #ff006a;
-}
-
-/* Productos */
-.store-container {
-    width: 95%;
-    max-width: 1200px;
-    margin: 20px auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-}
-
-.product-card {
-    background: #0a0a0a;
-    border: 2px solid #009dff;
-    padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 0 15px #009dff50, 0 0 25px #ff006a30;
-    transition: 0.2s;
-}
-
-.product-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 25px #009dff, 0 0 40px #ff006a;
-}
-
-.product-img {
-    width: 100%;
-    border-radius: 12px;
-    margin-bottom: 12px;
-}
-
-/* Nombre del producto */
-.product-title {
-    font-size: 1.3rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px #009dff;
-}
-
-/* Precio */
-.product-price {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-}
-
-/* Duración */
-.product-days {
-    font-size: 0.95rem;
-    opacity: 0.8;
-}
-
-/* Stock verde */
-.product-stock {
-    margin-top: 8px;
-    font-weight: 700;
-    color: #00ff6e;
-    text-shadow: 0 0 10px #00ff6e;
-}
-
-/* Botones */
-.product-btn {
-    width: 100%;
-    margin-top: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 2px solid #009dff;
-    background: #001f3f;
-    color: white;
-    cursor: pointer;
-    font-weight: 600;
-    box-shadow: 0 0 10px #009dff;
-    transition: 0.2s;
-}
-
-.product-btn:hover {
-    background: #009dff;
-    color: #000;
-}
-
-/* Modal info */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: #000000aa;
-}
-
-.modal-content {
-    background: #0a0a0a;
-    width: 90%;
-    max-width: 450px;
-    margin: 120px auto;
-    padding: 25px;
-    border-radius: 12px;
-    text-align: center;
-    border: 2px solid #009dff;
-    box-shadow: 0 0 25px #009dff, 0 0 45px #ff006a;
-    }
+/* ===== FOOTER ===== */ footer { text-align: center; padding: 20px; color: #888; background: #05060a; }
