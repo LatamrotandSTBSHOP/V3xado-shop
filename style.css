@@ -76,3 +76,66 @@ body, button, input, a {
     font-size: 0.9rem;
     opacity: 0.6;
 }
+/* Contenedor login */
+.login-container {
+    width: 90%;
+    max-width: 420px;
+    margin: 80px auto;
+    background: #0a0a0a;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #009dff80, 0 0 35px #ff005580;
+    text-align: center;
+}
+
+/* Titulo login */
+.login-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px #009dff, 0 0 25px #ff006a;
+}
+
+/* Etiquetas */
+.label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    margin: 10px 0 5px;
+    color: #c8c8c8;
+}
+
+/* Inputs */
+.input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 2px solid #009dff;
+    background: #020202;
+    color: white;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.input:focus {
+    box-shadow: 0 0 15px #009dff, 0 0 35px #ff0055;
+    border-color: #ff006a;
+}
+
+/* Botón login */
+.login-btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Volver */
+.back {
+    margin-top: 20px;
+    display: inline-block;
+    text-decoration: none;
+    color: #ff4fa3;
+    font-size: 0.9rem;
+    text-shadow: 0 0 10px #ff4fa3;
+}
