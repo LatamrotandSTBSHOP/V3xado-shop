@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - V3xado Shop</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg">
+
+    <header class="store-header">
+        <h1 class="store-title">🛒 V3xado Shop</h1>
+        <a href="login.html" class="btn-logout">Cerrar sesión</a>
+    </header>
+
+    <section class="store-container" id="productList">
+        <!-- Aquí Firebase insertará los productos -->
+    </section>
+
+    <!-- Modal de Información -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <h2 id="infoName"></h2>
+            <p id="infoDesc"></p>
+            <p id="infoDays"></p>
+            <button class="btn-neon-blue" onclick="closeInfo()">Cerrar</button>
+        </div>
+    </div>
+
+</body>
+</html>
