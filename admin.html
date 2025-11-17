@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - LATAM Store</title>
+    <style>
+        /* Reset y básicos */
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Arial', sans-serif; }
+        body { background:#0a0a0a; color:#fff; }
+        h1, h2, h3 { color:#ff00ff; }
+        .container { width:90%; margin:auto; padding:20px; }
+        .section { background:#1a1a1a; padding:20px; margin-bottom:20px; border-radius:15px; box-shadow:0 0 15px #ff00ff33; }
+        input, select, button { padding:10px; margin:5px 0; border-radius:8px; border:none; outline:none; }
+        input, select { width:100%; background:#111; color:#fff; }
+        button { background:#ff00ff; color:#fff; cursor:pointer; transition:0.3s; }
+        button:hover { opacity:0.8; }
+        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        th, td { padding:10px; border-bottom:1px solid #333; text-align:left; }
+        th { color:#ff00ff; }
+        .cards { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px; }
+        .card { flex:1; min-width:150px; background:#111; padding:20px; border-radius:15px; box-shadow:0 0 15px #ff00ff66; text-align:center; }
+        .login-section { max-width:400px; margin:auto; margin-top:50px; }
+        @media(max-width:768px){ .cards{ flex-direction:column; } }
+    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="login-section" class="section login-section">
+            <h2>Login Admin</h2>
+            <input type="text" id="admin-user" placeholder="Usuario">
+            <input type="password" id="admin-pass" placeholder="Contraseña">
+            <button onclick="login()">Entrar</button>
+            <p id="login-msg" style="color:red;"></p>
+        </div>
+
+        <div id="dashboard" style="display:none;">
+            <h1>Dashboard Admin - LATAM Store</h1>
+
+            <!-- Tarjetas de resumen -->
+            <div class="cards">
+                <div class="card">
+                    <h3 id="total-users">Usuarios: 0</h3>
+                </div>
+                <div class="card">
+                    <h3 id="total-products">Productos: 0</h3>
+                </div>
+                <div class="card">
+                    <h3 id="total-saldo">Saldo Total: $0</h3>
+                </div>
+            </div>
+
+            <!-- Usuarios -->
+            <div class="section">
+                <h2>Usuarios</h2>
+                <select id="user-list"></select>
+                <input type="number" id="saldo-amount" placeholder="Monto">
+                <button onclick="agregarSaldo()">Agregar Saldo</button>
+                <button onclick="quitarSaldo()">Quitar Saldo</button>
+                <button onclick="ponerAdmin()">Poner Admin</button>
+                <button onclick="quitarAdmin()">Quitar Admin</button>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Saldo</th>
+                            <th>Admin</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table"></tbody>
+                </table>
+            </div>
+
+            <!-- Productos -->
+            <div class="section">
+                <h2>Productos</h2>
+                <input type="text" id="prod-name" placeholder="Nombre del producto">
+                <input type="number" id="prod-price" placeholder="Precio">
+                <button onclick="agregarProducto()">Agregar Producto</button>
+                <select id="prod-list"></select>
+                <button onclick="quitarProducto()">Quitar Producto</button>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prod-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6mbAmpCkh1Qg8oCRCLSOVrHXDJTB8z_g",
+            authDomain: "v3xado-shop.firebaseapp.com",
+            projectId: "v3xado-shop",
+            storageBucket: "storageBucket: "v3xado-shop.appspot.com"",
+            messagingSenderId: "246252251936",
+            appId: "1:246252251936:web:06a027f7b3e0a5d5c6c545"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Admin fijo
+        const ADMIN_USER = "felipepollo123456789xd";
+        const ADMIN_PASS = "2013felipe";
+
+        function login(){
+            const user = document.getElementById("admin-user").value;
+            const pass = document.getElementById("admin-pass").value;
+            const msg = document.getElementById("login-msg");
+            if(user===ADMIN_USER && pass===ADMIN_PASS){
+                document.getElementById("login-section").style.display="none";
+                document.getElementById("dashboard").style.display="block";
+                cargarUsuarios();
+                cargarProductos();
+            }else{ msg.textContent="Usuario o contraseña incorrectos"; }
+        }
+
+        // Usuarios
+        function cargarUsuarios(){
+            const select = document.getElementById("user-list");
+            const table = document.getElementById("user-table");
+            select.innerHTML=""; table.innerHTML="";
+            let totalSaldo=0;
+            db.collection("usuarios").get().then(snapshot=>{
+                snapshot.forEach(doc=>{
+                    const data = doc.data();
+                    const option = document.createElement("option");
+                    option.value = doc.id;
+                    option.text = data.nombre;
+                    select.appendChild(option);
+
+                    const row = document.createElement("tr");
+                    row.innerHTML=`<td>${data.nombre}</td><td>$${data.saldo}</td><td>${data.admin? "Sí":"No"}</td>`;
+                    table.appendChild(row);
+
+                    totalSaldo += Number(data.saldo);
+                });
+                document.getElementById("total-users").textContent = "Usuarios: "+snapshot.size;
+                document.getElementById("total-saldo").textContent = "Saldo Total: $"+totalSaldo;
+            });
+        }
+
+        function agregarSaldo(){
+            const userId = document.getElementById("user-list").value;
+            const amount = Number(document.getElementById("saldo-amount").value);
+            if(userId && amount){
+                db.collection("usuarios").doc(userId).update({saldo: firebase.firestore.FieldValue.increment(amount)})
+                  .then(()=> cargarUsuarios());
+            }
+        }
+        function quitarSaldo(){
+            const userId = document.getElementById("user-list").value;
+            const amount = Number(document.getElementById("saldo-amount").value);
+            if(userId && amount){
+                db.collection("usuarios").doc(userId).update({saldo: firebase.firestore.FieldValue.increment(-amount)})
+                  .then(()=> cargarUsuarios());
+            }
+        }
+        function ponerAdmin(){
+            const userId = document.getElementById("user-list").value;
+            if(userId){
+                db.collection("usuarios").doc(userId).update({admin:true}).then(()=> cargarUsuarios());
+            }
+        }
+        function quitarAdmin(){
+            const userId = document.getElementById("user-list").value;
+            if(userId){
+                db.collection("usuarios").doc(userId).update({admin:false}).then(()=> cargarUsuarios());
+            }
+        }
+
+        // Productos
+        function cargarProductos(){
+            const select = document.getElementById("prod-list");
+            const table = document.getElementById("prod-table");
+            select.innerHTML=""; table.innerHTML="";
+            db.collection("productos").get().then(snapshot=>{
+                snapshot.forEach(doc=>{
+                    const data = doc.data();
+                    const option = document.createElement("option");
+                    option.value = doc.id;
+                    option.text = data.nombre;
+                    select.appendChild(option);
+
+                    const row = document.createElement("tr");
+                    row.innerHTML=`<td>${data.nombre}</td><td>$${data.precio}</td>`;
+                    table.appendChild(row);
+                });
+                document.getElementById("total-products").textContent = "Productos: "+snapshot.size;
+            });
+        }
+
+        function agregarProducto(){
+            const name = document.getElementById("prod-name").value;
+            const price = Number(document.getElementById("prod-price").value);
+            if(name && price){
+                db.collection("productos").add({nombre:name, precio:price}).then(()=> cargarProductos());
+            }
+        }
+        function quitarProducto(){
+            const prodId = document.getElementById("prod-list").value;
+            if(prodId){
+                db.collection("productos").doc(prodId).delete().then(()=> cargarProductos());
+            }
+        }
+    </script>
+</body>
+  </html>
